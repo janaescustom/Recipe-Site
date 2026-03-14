@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What's For Dinner</title>
+    <script></script>
+    <script
+      src="https://kit.fontawesome.com/0f99b745de.js"
+      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="main__page">
+      <nav>
+        <div class="nav__logo">
+          <a href="#" class="logo-link nav__link">
+            <img src="./assets/feed-me.png" alt="LOGO" class="plant" />
+          </a>
+        </div>
+        <div class="nav__links">
+          <div class="nav__link">
+            <a href="#" class="nav__anchor">Category</a>
+          </div>
+          <div class="nav__link">
+            <a href="" class="nav__anchor">All</a>
+          </div>
+          <div class="nav__link">
+            <a href="" class="nav__anchor">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="landing">
+        <div class="landing__container">
+        <h1>Recipes for every <span class="taste"> Taste Bud</span></h1>
+          <div class="images-container">
+          
+          </div>
+          <h2>What are you craving?</h2>
+          <form action="search">
+            <div class="user-input">
+            <input
+            type="text"
+            name="ingredient"
+            id="ingredient"
+            placeholder="Search ingredient"
+            required
+            />
+            <input type="submit" id="ingredient__lookup" onclick="chomp()" value="Let's Cook Something Up">
+              </div>
+          </form>
+          <div id="svg-container" class ="svg-container" style="">
+            <div class="eating-plant planter-box">
+              <img
+                src="./assets/top-mouthBG.png"
+                class="eating-plant top-mouth"
+                id="top-mouth"
+                alt="top"
+              />
+              <img
+                src="./assets/bottom-mouthBG.png"
+                class="eating-plant bottom-mouth"
+                id="bottom-mouth"
+                alt="bottom"
+              />
+            </div>
+        </div>
+      </div>
+      </section>
+      <footer>
+        <div class="searchResults">
+
+      </div>
+      </footer>
+    </main>
+    <script src="index.js"></script>
+  </body>
+</html>
