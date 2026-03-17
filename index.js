@@ -1,7 +1,8 @@
 const meals = document.querySelector(".images-container");
 const images = document.querySelectorAll(".image");
 const formEl = document.querySelector("form");
-const resultsEl = document.querySelector(".searchResults");
+const inputEl = document.querySelector("#ingredient");
+const animation = document.querySelector(".svg-container");
 let mealList = [];
 let firstSixArray = [];
 let sixMeals = [];
@@ -16,12 +17,12 @@ async function landingPage() {
   }
   mealList.forEach((meal) => {
     meals.innerHTML += `
-            <div class="landing-image image" style="background: url('${meal.strMealThumb}')"
-            onclick="">
-                <h1 class="name">${meal.strMeal}</h1>
-                <h3 class="category">${meal.strArea} ${meal.strCategory}</h3>
-            </div>
-            `;
+    <div class="landing-image image" style="background: url('${meal.strMealThumb}')"
+    onclick="">
+    <h3 class="category">${meal.strArea} ${meal.strCategory}</h3>
+    <h1 class="name">${meal.strMeal}</h1>
+    </div>
+    `;
   });
 }
 
@@ -35,64 +36,56 @@ landingPage();
 
 formEl.addEventListener("submit", async (event) => {
   event.preventDefault();
-  resultsEl.innerHTML = "";
-  const inputEl = document.querySelector("#ingredient");
-  const inputVal = inputEl.value;
-  let recipes = await fetch(
-    `https://www.themealdb.com/api/json/v1/1/filter.php?i=${inputVal}`,
-  );
-  const recipesData = await recipes.json();
-
-  const firstSix = recipesData.meals.slice(0, 6);
-
-  console.log(firstSix);
-
   meals.innerHTML = "";
 
-  firstSix.forEach((meal) => {
-    firstSixArray.push(meal.idMeal);
-  });
-  console.log(firstSixArray);
+  const inputVal = inputEl.value.trim();
 
+  if (!inputVal) {
+    alert("Please enter an ingredient!");
+    return; // Exit the function if the input is empty
+  }
 
-  firstSixArray.forEach(async (id) => {
-    const getMeal = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
-    );
-    const mealInfo = await getMeal.json();
-    console.log(mealInfo);
-    sixMeals.push(mealInfo.meals[0]);
-  });
-  
-  console.log(sixMeals)
- meals.innerHTML = sixMeals.map((meal) => mealsHTML(meal)).join("");
+  chomp();
 
-// for (let i =0; i < 6; ++i) {
-//   meals.innerHTML += `
-//             <div class="landing-image image" style="background: url('${sixMeals[i].strMealThumb}')"
-//             onclick="">
-//                 <h1 class="name">${sixMeals[i].strMeal}</h1>
-//                 <h3 class="category">${sixMeals[i].strArea} ${sixMeals[i].strCategory}</h3>
-//             </div>
-//             `;
-function mealsHTML(meal) {
-    return `
-            <div class="landing-image image" style="background: url('${meal.strMealThumb}')"
-            onclick="">
-                <h1 class="name">${meal.strMeal}</h1>
-                <h3 class="category">${meal.strArea} ${meal.strCategory}</h3>
-            </div>
-            `;
-  };
-// }
+  animation.addEventListener(
+    "animationend",
+    async function () {
+      let recipes = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/filter.php?i=${inputVal}`,
+      );
+      const recipesData = await recipes.json();
+      const firstSix = recipesData.meals.slice(0, 6);
+      const sixIds = firstSix.map((meal) => meal.idMeal);
+
+      const detailMealsPromises = sixIds.map(async (id) => {
+        const detailMeals = await fetch(
+          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
+        );
+        const detailedMeals = await detailMeals.json();
+        return detailedMeals;
+      });
+      const allDetailedMeals = await Promise.all(detailMealsPromises);
+      meals.innerHTML = allDetailedMeals
+        .map((meal) => mealsHTML(meal))
+        .join("");
+    },
+    { once: true },
+  );
 });
 
-
+function mealsHTML(meal) {
+  return `
+            <div class="landing-image image" style="background: url('${meal.meals[0].strMealThumb}')"
+            onclick="">
+                <h1 class="name">${meal.meals[0].strMeal}</h1>
+                <h3 class="category">${meal.meals[0].strArea} ${meal.meals[0].strCategory}</h3>
+            </div>
+            `;
+}
 
 function chomp() {
   document.body.classList += " animate-across";
 
-  const animation = document.querySelector(".svg-container");
   animation.addEventListener(
     "animationend",
     function () {
@@ -102,4 +95,41 @@ function chomp() {
   );
 
   animation.style.left = "120vw"; // Reset position
+}
+
+let wasCalled = false;
+function categoryFilter(event) {
+  wasCalled = true;
+  const filterChange = event.target.value
+  
+  filters();
+  
+  async function filters() {
+    const filterPromise = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${filterChange}`);
+    const filter = await filterPromise.json();
+    
+    console.log(filter)
+    const filteredIds = filter.meals.map((meal)=> meal.idMeal)
+    console.log(filteredIds)
+    const detailMealsPromises = filteredIds.map(async (id) => {
+        const detailMeals = await fetch(
+          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
+        );
+        const detailedMeals = await detailMeals.json();
+        return detailedMeals;
+      });
+      const allDetailedMeals = await Promise.all(detailMealsPromises);
+      console.log(allDetailedMeals);
+
+      if ( event.target.value == 'A_TO_Z') {
+        sortArea(allDetailedMeals)
+      }
+  }
+}
+
+function sortArea(allDetailedMeals){
+  console.log(`${allDetailedMeals[0].meals[0].strArea}`)
+  console.log('it worked, cool')
+  // meals.innerHTML = "";
+  // console.log(.meals[0].idMeal)
 }
