@@ -22,7 +22,7 @@
         </a>
         <div class="nav__links">
           <div class="nav__link">
-            <a href="#" class="nav__anchor" onclick="dropDown()">Categories</a>
+            <a href="#results" class="nav__anchor" >Categories</a>
           </div>
           <!-- <div class="nav__link">
             <a href="" class="nav__anchor" onclick="dropDown()">Region</a>
@@ -85,7 +85,7 @@
               <div class="drop-down__categories">
                 <form>
                   <label for="category">Category:</label>
-                  <select name="" id="" onchange="categoryFilter(event)">
+                  <select name="" id="category" onchange="categoryFilter(event)">
                     <option value="" disabled selected>--Please choose an option--</option>
                     <option value="BREAKFAST">Breakfast</option>
                     <option value="STARTER">Meal Starters</option>
@@ -103,18 +103,21 @@
                     <option value="GOAT">Goat</option>
                     <option value="PORK">Pork</option>
                   </select>
+                </form>
+              </div>
+              <div class="drop-down__area">
+                <form>
                   <label for="area">If Desired:</label>
-                  <select name="" id="sortArea" onchange="sortArea(allDetailedMeals)">
+                  <select name="" id="sortArea" onchange="sortArea()">
                     <option value="" selected>--Sort Region--</option>
                     <option value="A_TO_Z">arrange A to Z</option>
                     <option value="Z_TO_A">arrange Z to A</option>
                   </select>
                 </form>
               </div>
-              <div class="drop-down__area">
-                <form>
-                </form>
-              </div>
+            </div>
+            <div class="results__container">
+              
             </div>
           </div>
         </div>
@@ -127,7 +130,7 @@
           <div class="footer__logo">
             <a href="#" class="footer__link">
               <div class="footer-img__container">
-                <img src="./assets/A.png" alt="" />
+                <img src="./assets/A.png" class="footer-img" />
               </div>
             </a>
           </div>

@@ -97,7 +97,10 @@ function chomp() {
   animation.style.left = "120vw"; // Reset position
 }
 
+let mealsCategorized = [];
+let allFilteredMeals = [];
 let wasCalled = false;
+const results = document.querySelector('.results__container');
 function categoryFilter(event) {
   wasCalled = true;
   const filterChange = event.target.value
@@ -111,25 +114,54 @@ function categoryFilter(event) {
     console.log(filter)
     const filteredIds = filter.meals.map((meal)=> meal.idMeal)
     console.log(filteredIds)
-    const detailMealsPromises = filteredIds.map(async (id) => {
-        const detailMeals = await fetch(
+    const filteredMealsPromises = filteredIds.map(async (id) => {
+        const filterMeals = await fetch(
           `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
         );
-        const detailedMeals = await detailMeals.json();
-        return detailedMeals;
+        const filteredMeals = await filterMeals.json();
+        return filteredMeals;
       });
-      const allDetailedMeals = await Promise.all(detailMealsPromises);
-      console.log(allDetailedMeals);
+      allFilteredMeals = await Promise.all(filteredMealsPromises);
+      console.log(allFilteredMeals);
+// sortArea(allFilteredMeals)
+const filterHTML = allFilteredMeals.map((meal) => {
+  return `<div class="filtered card on-hover" style="background-image: url('${meal.meals[0].strMealThumb}')">
+ <div class="inner--outer">
+  <p>${meal.meals[0].strArea}</p>
+  <p>${meal.meals[0].strMeal}</p></div>
 
-      if ( event.target.value == 'A_TO_Z') {
-        sortArea(allDetailedMeals)
-      }
+  </div>`
+}).join("");
+
+results.innerHTML = filterHTML
+    }
   }
-}
+  
+  function sortArea(){
+    const order = document.getElementById('sortArea').value; // Get the selected sort order
+    console.log("why aren't you working")
 
-function sortArea(allDetailedMeals){
-  console.log(`${allDetailedMeals[0].meals[0].strArea}`)
-  console.log('it worked, cool')
-  // meals.innerHTML = "";
-  // console.log(.meals[0].idMeal)
+    if (mealsCategorized.length === 0) {
+      console.log('nothing to sort');
+      return;
+    }
+
+  mealsCategorized.sort((a, b) => {
+    const areaA = a.meals[0].strArea.toLowerCase(); // Get area in lowercase for case-insensitive comparison
+    const areaB = b.meals[0].strArea.toLowerCase();
+    
+    if (order === 'A_TO_Z') {
+      console.log(areaA.localeCompare(areaB)); // Sort A to Z
+      return  
+    } else {
+      return areaB.localeCompare(areaA); // Sort Z to A
+    }
+  });
+  console.log(allFilteredMeals)
 }
+// console.log(order)
+// if (order === 'A_TO_Z') {
+//   // sortArea()
+//   console.log("a to z bia");
+//   sortArea(allFilteredMeals)
+// }
