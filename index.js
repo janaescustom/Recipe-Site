@@ -75,7 +75,7 @@ formEl.addEventListener("submit", async (event) => {
 
 function mealsHTML(meal) {
   return `
-            <div class="landing-image image" style="background: url('${meal.meals[0].strMealThumb}')"
+            <div class="landing-image image" style="background-image: url('${meal.meals[0].strMealThumb}')"
             onclick="">
                 <h1 class="name">${meal.meals[0].strMeal}</h1>
                 <h3 class="category">${meal.meals[0].strArea} ${meal.meals[0].strCategory}</h3>
@@ -97,71 +97,65 @@ function chomp() {
   animation.style.left = "120vw"; // Reset position
 }
 
-let mealsCategorized = [];
-let allFilteredMeals = [];
-let wasCalled = false;
-const results = document.querySelector('.results__container');
-function categoryFilter(event) {
-  wasCalled = true;
-  const filterChange = event.target.value
+const results = document.querySelector(".results__container");
+let categorizedMealIds = [];
+let categorizedMeals = [];
+let pickedMeals = [];
+
+async function categoryFilter(event) {
+const picked = event.target.value;
+results.innerHTML = "";
+pickedMeals = [];
+
+const categoryPromise = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${picked}`);
+const categoryMeals = await categoryPromise.json();
+
+categorizedMealIds = categoryMeals.meals.map((meal) => meal.idMeal);
+
+const categorizedMealsPromise = categorizedMealIds.map(async (id) => {
+  const categorizedPromise = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+  const catPromises = await categorizedPromise.json();
+  return catPromises;
+});
+
+categorizedMeals = await Promise.all(categorizedMealsPromise);
+
+
+//YAY! THIS WORKS
+for (let i = 0; i < categorizedMeals.length; ++i) {
+  pickedMeals.push(categorizedMeals[i].meals[0]);
+};
+console.log(pickedMeals[0].strMeal)
+pickedMeals.forEach(loadMeals);
+};
   
-  filters();
-  
-  async function filters() {
-    const filterPromise = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${filterChange}`);
-    const filter = await filterPromise.json();
-    
-    console.log(filter)
-    const filteredIds = filter.meals.map((meal)=> meal.idMeal)
-    console.log(filteredIds)
-    const filteredMealsPromises = filteredIds.map(async (id) => {
-        const filterMeals = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`,
-        );
-        const filteredMeals = await filterMeals.json();
-        return filteredMeals;
-      });
-      allFilteredMeals = await Promise.all(filteredMealsPromises);
-      console.log(allFilteredMeals);
-// sortArea(allFilteredMeals)
-const filterHTML = allFilteredMeals.map((meal) => {
-  return `<div class="filtered card on-hover" style="background-image: url('${meal.meals[0].strMealThumb}')">
- <div class="inner--outer">
-  <p>${meal.meals[0].strArea}</p>
-  <p>${meal.meals[0].strMeal}</p></div>
+  function sort(){
+    const order = document.getElementById('sortArea').value;
+    console.log(order)
 
-  </div>`
-}).join("");
-
-results.innerHTML = filterHTML
-    }
-  }
-  
-  function sortArea(){
-    const order = document.getElementById('sortArea').value; // Get the selected sort order
-    console.log("why aren't you working")
-
-    if (mealsCategorized.length === 0) {
-      console.log('nothing to sort');
-      return;
-    }
-
-  mealsCategorized.sort((a, b) => {
-    const areaA = a.meals[0].strArea.toLowerCase(); // Get area in lowercase for case-insensitive comparison
-    const areaB = b.meals[0].strArea.toLowerCase();
-    
-    if (order === 'A_TO_Z') {
-      console.log(areaA.localeCompare(areaB)); // Sort A to Z
-      return  
-    } else {
-      return areaB.localeCompare(areaA); // Sort Z to A
-    }
-  });
-  console.log(allFilteredMeals)
+    const sorted = pickedMeals.sort((a, b) => {
+      const areaA = a.strArea.toLowerCase();
+      const areaB = b.strArea.toLowerCase();
+      if (order === "A_TO_Z") {
+        return areaA.localeCompare(areaB);
+      }
+      else if (order === "Z_TO_A") {
+        return areaB.localeCompare(areaA);
+      }
+  })
+  console.log(sorted)
+  results.innerHTML = "";
+  sorted.forEach(loadMeals);  
 }
-// console.log(order)
-// if (order === 'A_TO_Z') {
-//   // sortArea()
-//   console.log("a to z bia");
-//   sortArea(allFilteredMeals)
-// }
+
+
+// loadMeals won't work until i fix the dynamic strings
+function loadMeals(meal) {
+  results.innerHTML +=
+  `<div class="filtered card on-hover" style="background-image: url('${meal.strMealThumb}')">
+   <div class="inner--outer">
+    <p>${meal.strArea}</p>
+    <p>${meal.strMeal}</p></div>
+    </div>`
+}
+
