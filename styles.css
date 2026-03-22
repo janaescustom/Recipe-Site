@@ -357,16 +357,26 @@ nav {
 }
 
 @media (max-width: 1200px) {
+    .landing {
+        width: 850px;
+    }
+
     .images-container {
         flex-direction: column;
+        width: 700px;
     }
 
     .landing-image {
         height: calc(100vh - 230px);
+        background-position: center;
     }
 
     .category {
         top: 50%;
         transform: translate(-50%, -50%) rotate(0);
     }
+}
+
+@media (max-width: ) {
+    
 }

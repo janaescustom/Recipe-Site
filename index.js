@@ -5,7 +5,6 @@ const inputEl = document.querySelector("#ingredient");
 const animation = document.querySelector(".svg-container");
 let mealList = [];
 let firstSixArray = [];
-let sixMeals = [];
 
 async function landingPage() {
   for (let i = 0; i < 6; ++i) {
@@ -15,15 +14,7 @@ async function landingPage() {
     const recipeData = await recipe.json();
     mealList.push(recipeData.meals[0]);
   }
-  mealList.forEach((meal) => {
-    meals.innerHTML += `
-    <div class="landing-image image" style="background: url('${meal.strMealThumb}')"
-    onclick="">
-    <h3 class="category">${meal.strArea} ${meal.strCategory}</h3>
-    <h1 class="name">${meal.strMeal}</h1>
-    </div>
-    `;
-  });
+  mealList.forEach(mealsHTML);
 }
 
 images.forEach((image) => {
@@ -65,20 +56,21 @@ formEl.addEventListener("submit", async (event) => {
         return detailedMeals;
       });
       const allDetailedMeals = await Promise.all(detailMealsPromises);
-      meals.innerHTML = allDetailedMeals
-        .map((meal) => mealsHTML(meal))
-        .join("");
+      const newArray = allDetailedMeals.map((meal) => {
+        return meal.meals[0]
+      })
+      newArray.forEach(mealsHTML)
     },
     { once: true },
   );
 });
 
 function mealsHTML(meal) {
-  return `
-            <div class="landing-image image" style="background-image: url('${meal.meals[0].strMealThumb}')"
+  meals.innerHTML += `
+            <div class="landing-image image" style="background-image: url('${meal.strMealThumb}')"
             onclick="">
-                <h1 class="name">${meal.meals[0].strMeal}</h1>
-                <h3 class="category">${meal.meals[0].strArea} ${meal.meals[0].strCategory}</h3>
+                <h1 class="name">${meal.strMeal}</h1>
+                <h3 class="category">${meal.strArea} ${meal.strCategory}</h3>
             </div>
             `;
 }
@@ -131,7 +123,6 @@ pickedMeals.forEach(loadMeals);
   
   function sort(){
     const order = document.getElementById('sortArea').value;
-    console.log(order)
 
     const sorted = pickedMeals.sort((a, b) => {
       const areaA = a.strArea.toLowerCase();
@@ -143,7 +134,6 @@ pickedMeals.forEach(loadMeals);
         return areaB.localeCompare(areaA);
       }
   })
-  console.log(sorted)
   results.innerHTML = "";
   sorted.forEach(loadMeals);  
 }
