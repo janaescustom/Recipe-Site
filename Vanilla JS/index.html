@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What's For Dinner</title>
+    <script src="index.js" defer></script>
+
+    <script
+      src="https://kit.fontawesome.com/0f99b745de.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <nav class="container">
+        <a href="#" class="logo-link">
+          <div class="nav__logo">
+            <img src="./assets/feed-me.png" alt="LOGO" class="plant" />
+          </div>
+        </a>
+        <div class="nav__links">
+          <div class="nav__link">
+            <a href="#results" class="nav__anchor" >Categories</a>
+          </div>
+          <!-- <div class="nav__link">
+            <a href="" class="nav__anchor" onclick="dropDown()">Region</a>
+          </div> -->
+          <div class="nav__link">
+            <a href="" class="nav__anchor"> Random </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section id="landing" class="landing">
+        <div class="container">
+          <div class="row landing__row">
+            <h1 class="title">
+              Recipes for every <span class="taste"> Taste Bud</span>
+            </h1>
+            <div class="images-container">
+              
+            </div>
+            <h2 class="subtitle">What are you craving?</h2>
+            <form action="submit" onsubmit="return false;">
+              <div class="user-input">
+                <input
+                  type="text"
+                  name="ingredient"
+                  id="ingredient"
+                  placeholder="Search ingredient"
+                  required
+                />
+                <input
+                  type="submit"
+                  id="ingredient__lookup"
+                  onclick="chomp()"
+                  value="Let's Cook Something Up"
+                />
+              </div>
+            </form>
+            <div id="svg-container" class="svg-container" style="">
+              <div class="eating-plant planter-box">
+                <img
+                  src="./assets/top-mouthBG.png"
+                  class="eating-plant top-mouth"
+                  id="top-mouth"
+                  alt="top"
+                />
+                <img
+                  src="./assets/bottom-mouthBG.png"
+                  class="eating-plant bottom-mouth"
+                  id="bottom-mouth"
+                  alt="bottom"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="results">
+        <div class="container">
+          <div class="row">
+            <div class="form__container">
+              <div class="drop-down__categories">
+                <form>
+                  <label for="category">Category:</label>
+                  <select name="" id="category" onchange="categoryFilter(event)">
+                    <option value="" disabled selected>--Please choose an option--</option>
+                    <option value="BREAKFAST">Breakfast</option>
+                    <option value="STARTER">Meal Starters</option>
+                    <option value="SIDE">Meal Sides</option>
+                    <option value="DESSERT">Desserts</option>
+                    <option value="VEGETARIAN">Vegetarian</option>
+                    <option value="VEGAN">Vegan</option>
+                    <option value="PASTA">Pasta</option>
+                    <option value="MISCELLANEOUS">Miscellaneous</option>
+                    <option value="" disabled>Protein Options:</option>
+                    <option value="SEAFOOD">Seafood</option>
+                    <option value="BEEF">Beef</option>
+                    <option value="CHICKEN">Chicken</option>
+                    <option value="LAMB">Lamb</option>
+                    <option value="GOAT">Goat</option>
+                    <option value="PORK">Pork</option>
+                  </select>
+                </form>
+              </div>
+              <div class="drop-down__area">
+                <form>
+                  <label for="area">If Desired:</label>
+                  <select name="" id="sortArea" onchange="sort()">
+                    <option value="" selected>--Sort Region--</option>
+                    <option value="A_TO_Z">arrange A to Z</option>
+                    <option value="Z_TO_A">arrange Z to A</option>
+                  </select>
+                </form>
+              </div>
+            </div>
+            <div class="results__container">
+              
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="footer__logo">
+            <a href="#" class="footer__link">
+              <div class="footer-img__container">
+                <img src="./assets/A.png" class="footer-img" />
+              </div>
+            </a>
+          </div>
+          <div class="footer__links">
+            <a href="" class="footer__link"> Lookup Meals by Area </a>
+            <a href="" class="footer__link">
+              Take a Chance With a Random Meal
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
